@@ -1,63 +1,61 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useChildren } from '../../ui/hooks/useChildren'
-import { useTasks } from '../../ui/hooks/useTasks'
-import { useSettings } from '../../ui/hooks/useSettings'
-import { Button } from '../../ui/components/Button'
-import { Select } from '../../ui/components/Select'
-import { TaskList } from './TaskList'
-import { AddTaskModal } from './AddTaskModal'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useChildren } from '../../ui/hooks/useChildren';
+import { useTasks } from '../../ui/hooks/useTasks';
+import { useSettings } from '../../ui/hooks/useSettings';
+import { Button } from '../../ui/components/Button';
+import { Select } from '../../ui/components/Select';
+import { TaskList } from './TaskList';
+import { AddTaskModal } from './AddTaskModal';
 
 export function TasksPage() {
-  const navigate = useNavigate()
-  const { children } = useChildren()
-  const { settings, updateSettings } = useSettings()
+  const navigate = useNavigate();
+  const { children } = useChildren();
+  const { settings, updateSettings } = useSettings();
 
   // Why: Use last selected child from settings, or first child if none selected
-  const [selectedChildId, setSelectedChildId] = useState<string>('')
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [selectedChildId, setSelectedChildId] = useState<string>('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks(selectedChildId)
+  const { tasks, addTask, toggleTask, deleteTask } = useTasks(selectedChildId);
 
   // Why: Initialize selected child on mount
   useEffect(() => {
-    const hasNoChildren = children.length === 0
+    const hasNoChildren = children.length === 0;
 
     if (hasNoChildren) {
-      navigate('/onboarding')
-      return
+      navigate('/onboarding');
+      return;
     }
 
-    const lastSelectedChild = settings.lastSelectedChildId
-    const lastSelectedChildExists = children.some(
-      child => child.id === lastSelectedChild
-    )
+    const lastSelectedChild = settings.lastSelectedChildId;
+    const lastSelectedChildExists = children.some((child) => child.id === lastSelectedChild);
 
     if (lastSelectedChild && lastSelectedChildExists) {
-      setSelectedChildId(lastSelectedChild)
+      setSelectedChildId(lastSelectedChild);
     } else {
-      setSelectedChildId(children[0].id)
+      setSelectedChildId(children[0].id);
     }
-  }, [children, settings.lastSelectedChildId, navigate])
+  }, [children, settings.lastSelectedChildId, navigate]);
 
   const handleChildChange = (childId: string | number) => {
-    const newChildId = String(childId)
-    setSelectedChildId(newChildId)
-    updateSettings({ lastSelectedChildId: newChildId })
-  }
+    const newChildId = String(childId);
+    setSelectedChildId(newChildId);
+    updateSettings({ lastSelectedChildId: newChildId });
+  };
 
   const handleAddTask = (taskSubject: string, taskDescription: string, taskDueDate: string) => {
-    addTask(selectedChildId, taskSubject, taskDescription, taskDueDate)
-  }
+    addTask(selectedChildId, taskSubject, taskDescription, taskDueDate);
+  };
 
-  const selectedChild = children.find(child => child.id === selectedChildId)
+  const selectedChild = children.find((child) => child.id === selectedChildId);
 
-  const childOptions = children.map(child => ({
+  const childOptions = children.map((child) => ({
     value: child.id,
     label: `${child.name} (${child.grade}. Sınıf)`
-  }))
+  }));
 
-  const hasMultipleChildren = children.length > 1
+  const hasMultipleChildren = children.length > 1;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -69,12 +67,7 @@ export function TasksPage() {
               onClick={() => navigate('/settings')}
               className="text-gray-600 hover:text-gray-900"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -102,9 +95,7 @@ export function TasksPage() {
             )}
 
             {!hasMultipleChildren && selectedChild && (
-              <h1 className="text-xl font-semibold text-gray-900">
-                {selectedChild.name}
-              </h1>
+              <h1 className="text-xl font-semibold text-gray-900">{selectedChild.name}</h1>
             )}
 
             <div className="w-6" />
@@ -116,24 +107,15 @@ export function TasksPage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Ödevler</h2>
-          <p className="text-gray-600 text-sm mt-1">
-            {getTodayFormatted()}
-          </p>
+          <p className="text-gray-600 text-sm mt-1">{getTodayFormatted()}</p>
         </div>
 
-        <TaskList
-          tasks={tasks}
-          onToggle={toggleTask}
-          onDelete={deleteTask}
-        />
+        <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
       </div>
 
       {/* Floating add button */}
       <div className="fixed bottom-6 right-6">
-        <Button
-          onClick={() => setIsAddModalOpen(true)}
-          className="shadow-lg px-6 py-3 text-lg"
-        >
+        <Button onClick={() => setIsAddModalOpen(true)} className="shadow-lg px-6 py-3 text-lg">
           + Ödev Ekle
         </Button>
       </div>
@@ -144,16 +126,16 @@ export function TasksPage() {
         onAdd={handleAddTask}
       />
     </div>
-  )
+  );
 }
 
 // Why: Format today's date in Turkish locale for header display
 function getTodayFormatted(): string {
-  const today = new Date()
+  const today = new Date();
   return today.toLocaleDateString('tr-TR', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
-  })
+  });
 }

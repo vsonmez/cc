@@ -1,30 +1,23 @@
-import type { Task } from '../../core/models/task'
-import { Checkbox } from '../../ui/components/Checkbox'
+import type { Task } from '../../core/models/task';
+import { Checkbox } from '../../ui/components/Checkbox';
 
 interface TaskItemProps {
-  task: Task
-  onToggle: (taskId: string) => void
-  onDelete: (taskId: string) => void
+  task: Task;
+  onToggle: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
 }
 
 export function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
-  const isCompleted = task.completed
+  const isCompleted = task.completed;
 
-  const taskStyles = isCompleted
-    ? 'opacity-60 line-through'
-    : ''
+  const taskStyles = isCompleted ? 'opacity-60 line-through' : '';
 
   return (
     <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-      <Checkbox
-        checked={isCompleted}
-        onChange={() => onToggle(task.id)}
-      />
+      <Checkbox checked={isCompleted} onChange={() => onToggle(task.id)} />
 
       <div className="flex-1 min-w-0">
-        <h3 className={`font-medium text-gray-900 ${taskStyles}`}>
-          {task.subject}
-        </h3>
+        <h3 className={`font-medium text-gray-900 ${taskStyles}`}>{task.subject}</h3>
         {task.description && (
           <p className={`text-sm text-gray-600 mt-1 whitespace-pre-wrap ${taskStyles}`}>
             {task.description}
@@ -37,12 +30,7 @@ export function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
         className="text-gray-400 hover:text-red-600 transition-colors"
         aria-label="Görevi sil"
       >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -52,5 +40,5 @@ export function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
         </svg>
       </button>
     </div>
-  )
+  );
 }

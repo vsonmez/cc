@@ -1,18 +1,16 @@
-import type { Child } from '../../core/models/child'
-import { Button } from '../../ui/components/Button'
+import type { Child } from '../../core/models/child';
+import { Button } from '../../ui/components/Button';
 
 interface ChildListProps {
-  children: Child[]
-  onDelete: (childId: string, childName: string) => void
+  children: Child[];
+  onDelete: (childId: string, childName: string) => void;
 }
 
 export function ChildList({ children, onDelete }: ChildListProps) {
-  const hasChildren = children.length > 0
+  const hasChildren = children.length > 0;
 
   if (!hasChildren) {
-    return (
-      <p className="text-gray-500 text-sm">Henüz çocuk eklenmemiş</p>
-    )
+    return <p className="text-gray-500 text-sm">Henüz çocuk eklenmemiş</p>;
   }
 
   return (
@@ -27,14 +25,11 @@ export function ChildList({ children, onDelete }: ChildListProps) {
             <p className="text-sm text-gray-600">{child.grade}. Sınıf</p>
           </div>
 
-          <Button
-            onClick={() => onDelete(child.id, child.name)}
-            variant="danger"
-          >
+          <Button onClick={() => onDelete(child.id, child.name)} variant="danger">
             Sil
           </Button>
         </div>
       ))}
     </div>
-  )
+  );
 }

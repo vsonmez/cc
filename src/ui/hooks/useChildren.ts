@@ -1,45 +1,45 @@
-import { useAppData } from './useAppData'
+import { useAppData } from './useAppData';
 import {
   getChildren,
   getChildById,
   addChild as addChildToStorage,
   updateChild as updateChildInStorage,
   deleteChild as deleteChildFromStorage
-} from '../../core/storage/repository'
-import type { Child } from '../../core/models/child'
+} from '../../core/storage/repository';
+import type { Child } from '../../core/models/child';
 
 export function useChildren() {
-  const { refreshData } = useAppData()
+  const { refreshData } = useAppData();
 
-  const children = getChildren()
+  const children = getChildren();
 
   const addChild = (childName: string, childGrade: number): Child | null => {
-    const newChild = addChildToStorage(childName, childGrade)
+    const newChild = addChildToStorage(childName, childGrade);
     if (newChild) {
-      refreshData()
+      refreshData();
     }
-    return newChild
-  }
+    return newChild;
+  };
 
   const updateChild = (childId: string, childName: string, childGrade: number): boolean => {
-    const success = updateChildInStorage(childId, childName, childGrade)
+    const success = updateChildInStorage(childId, childName, childGrade);
     if (success) {
-      refreshData()
+      refreshData();
     }
-    return success
-  }
+    return success;
+  };
 
   const deleteChild = (childId: string): boolean => {
-    const success = deleteChildFromStorage(childId)
+    const success = deleteChildFromStorage(childId);
     if (success) {
-      refreshData()
+      refreshData();
     }
-    return success
-  }
+    return success;
+  };
 
   const getChild = (childId: string): Child | null => {
-    return getChildById(childId)
-  }
+    return getChildById(childId);
+  };
 
   return {
     children,
@@ -47,5 +47,5 @@ export function useChildren() {
     updateChild,
     deleteChild,
     getChild
-  }
+  };
 }

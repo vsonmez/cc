@@ -1,14 +1,14 @@
-import type { Task } from '../../core/models/task'
-import { TaskItem } from './TaskItem'
+import type { Task } from '../../core/models/task';
+import { TaskItem } from './TaskItem';
 
 interface TaskListProps {
-  tasks: Task[]
-  onToggle: (taskId: string) => void
-  onDelete: (taskId: string) => void
+  tasks: Task[];
+  onToggle: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
 }
 
 export function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
-  const hasTasks = tasks.length > 0
+  const hasTasks = tasks.length > 0;
 
   if (!hasTasks) {
     return (
@@ -19,19 +19,14 @@ export function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
           Yeni ödev eklemek için aşağıdaki butona tıklayın
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onToggle={onToggle}
-          onDelete={onDelete}
-        />
+        <TaskItem key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
       ))}
     </div>
-  )
+  );
 }

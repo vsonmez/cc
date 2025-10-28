@@ -1,40 +1,37 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  children: React.ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
 }
 
 export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   // Why: Close modal on Escape key press for better UX
   useEffect(() => {
     if (!isOpen) {
-      return
+      return;
     }
 
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleEscapeKey)
-    return () => document.removeEventListener('keydown', handleEscapeKey)
-  }, [isOpen, onClose])
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
-    return null
+    return null;
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
 
       {/* Modal content */}
       <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
@@ -44,12 +41,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 focus:outline-none"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -63,5 +55,5 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         <div className="p-4">{children}</div>
       </div>
     </div>
-  )
+  );
 }
