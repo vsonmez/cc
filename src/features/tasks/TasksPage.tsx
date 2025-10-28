@@ -33,9 +33,10 @@ export function TasksPage() {
 
     if (lastSelectedChild && lastSelectedChildExists) {
       setSelectedChildId(lastSelectedChild);
-    } else {
-      setSelectedChildId(children[0].id);
+      return;
     }
+
+    setSelectedChildId(children[0].id);
   }, [children, settings.lastSelectedChildId, navigate]);
 
   const handleChildChange = (childId: string | number) => {

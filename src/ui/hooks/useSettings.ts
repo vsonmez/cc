@@ -12,10 +12,10 @@ export function useSettings() {
 
   const updateSettings = (newSettings: Partial<Settings>): boolean => {
     const success = updateSettingsInStorage(newSettings);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   return {

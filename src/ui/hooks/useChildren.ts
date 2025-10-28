@@ -15,26 +15,26 @@ export function useChildren() {
 
   const addChild = (childName: string, childGrade: number): Child | null => {
     const newChild = addChildToStorage(childName, childGrade);
-    if (newChild) {
-      refreshData();
-    }
+    if (!newChild) return null;
+
+    refreshData();
     return newChild;
   };
 
   const updateChild = (childId: string, childName: string, childGrade: number): boolean => {
     const success = updateChildInStorage(childId, childName, childGrade);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   const deleteChild = (childId: string): boolean => {
     const success = deleteChildFromStorage(childId);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   const getChild = (childId: string): Child | null => {

@@ -22,9 +22,9 @@ export function useTasks(childId?: string) {
     taskDueDate: string
   ): Task | null => {
     const newTask = addTaskToStorage(taskChildId, taskSubject, taskDescription, taskDueDate);
-    if (newTask) {
-      refreshData();
-    }
+    if (!newTask) return null;
+
+    refreshData();
     return newTask;
   };
 
@@ -35,26 +35,26 @@ export function useTasks(childId?: string) {
     taskDueDate: string
   ): boolean => {
     const success = updateTaskInStorage(taskId, taskSubject, taskDescription, taskDueDate);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   const deleteTask = (taskId: string): boolean => {
     const success = deleteTaskFromStorage(taskId);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   const toggleTask = (taskId: string): boolean => {
     const success = toggleTaskInStorage(taskId);
-    if (success) {
-      refreshData();
-    }
-    return success;
+    if (!success) return false;
+
+    refreshData();
+    return true;
   };
 
   const getTasksForDate = (date: string): Task[] => {
