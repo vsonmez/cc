@@ -1,42 +1,42 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Input } from '../../ui/components/Input'
-import { Select } from '../../ui/components/Select'
-import { Button } from '../../ui/components/Button'
-import { useChildren } from '../../ui/hooks/useChildren'
-import { validateChild } from '../../core/models/child'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Input } from "../../ui/components/Input";
+import { Select } from "../../ui/components/Select";
+import { Button } from "../../ui/components/Button";
+import { useChildren } from "../../ui/hooks/useChildren";
+import { validateChild } from "../../core/models/child";
 
 export function OnboardingPage() {
-  const navigate = useNavigate()
-  const { addChild } = useChildren()
+  const navigate = useNavigate();
+  const { addChild } = useChildren();
 
-  const [name, setName] = useState('')
-  const [grade, setGrade] = useState(1)
-  const [error, setError] = useState('')
+  const [childName, setChildName] = useState("");
+  const [childGrade, setChildGrade] = useState(1);
+  const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    const validationError = validateChild(name, grade)
+    const validationError = validateChild(childName, childGrade);
 
     if (validationError) {
-      setError(validationError)
-      return
+      setError(validationError);
+      return;
     }
 
-    const newChild = addChild(name, grade)
+    const newChild = addChild(childName, childGrade);
 
     if (!newChild) {
-      setError('Çocuk eklenirken bir hata oluştu')
-      return
+      setError("Çocuk eklenirken bir hata oluştu");
+      return;
     }
 
     // Why: Navigate to main tasks page after successful onboarding
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   const gradeOptions = Array.from({ length: 12 }, (_, index) => ({
     value: index + 1,
-    label: `${index + 1}. Sınıf`
-  }))
+    label: `${index + 1}. Sınıf`,
+  }));
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -53,8 +53,8 @@ export function OnboardingPage() {
         <div className="space-y-4">
           <Input
             label="Çocuğunuzun Adı"
-            value={name}
-            onChange={setName}
+            value={childName}
+            onChange={setChildName}
             placeholder="örn: Ahmet"
             required
             maxLength={50}
@@ -62,8 +62,8 @@ export function OnboardingPage() {
 
           <Select
             label="Sınıfı"
-            value={grade}
-            onChange={(value) => setGrade(value as number)}
+            value={childGrade}
+            onChange={(value) => setChildGrade(value as number)}
             options={gradeOptions}
             required
           />
@@ -80,5 +80,5 @@ export function OnboardingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

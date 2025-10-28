@@ -1,53 +1,53 @@
-import { useState } from 'react'
-import { Modal } from '../../ui/components/Modal'
-import { Input } from '../../ui/components/Input'
-import { Select } from '../../ui/components/Select'
-import { Button } from '../../ui/components/Button'
-import { validateChild } from '../../core/models/child'
+import { useState } from "react";
+import { Modal } from "../../ui/components/Modal";
+import { Input } from "../../ui/components/Input";
+import { Select } from "../../ui/components/Select";
+import { Button } from "../../ui/components/Button";
+import { validateChild } from "../../core/models/child";
 
 interface AddChildModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onAdd: (name: string, grade: number) => void
+  isOpen: boolean;
+  onClose: () => void;
+  onAdd: (childName: string, childGrade: number) => void;
 }
 
 export function AddChildModal({ isOpen, onClose, onAdd }: AddChildModalProps) {
-  const [name, setName] = useState('')
-  const [grade, setGrade] = useState(1)
-  const [error, setError] = useState('')
+  const [childName, setChildName] = useState("");
+  const [childGrade, setChildGrade] = useState(1);
+  const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    const validationError = validateChild(name, grade)
+    const validationError = validateChild(childName, childGrade);
 
     if (validationError) {
-      setError(validationError)
-      return
+      setError(validationError);
+      return;
     }
 
-    onAdd(name, grade)
-    handleClose()
-  }
+    onAdd(childName, childGrade);
+    handleClose();
+  };
 
   const handleClose = () => {
     // Why: Reset form state when modal closes
-    setName('')
-    setGrade(1)
-    setError('')
-    onClose()
-  }
+    setChildName("");
+    setChildGrade(1);
+    setError("");
+    onClose();
+  };
 
   const gradeOptions = Array.from({ length: 12 }, (_, index) => ({
     value: index + 1,
-    label: `${index + 1}. Sınıf`
-  }))
+    label: `${index + 1}. Sınıf`,
+  }));
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Yeni Çocuk Ekle">
       <div className="space-y-4">
         <Input
           label="İsim"
-          value={name}
-          onChange={setName}
+          value={childName}
+          onChange={setChildName}
           placeholder="örn: Zeynep"
           required
           maxLength={50}
@@ -55,8 +55,8 @@ export function AddChildModal({ isOpen, onClose, onAdd }: AddChildModalProps) {
 
         <Select
           label="Sınıf"
-          value={grade}
-          onChange={(value) => setGrade(value as number)}
+          value={childGrade}
+          onChange={(value) => setChildGrade(value as number)}
           options={gradeOptions}
           required
         />
@@ -77,5 +77,5 @@ export function AddChildModal({ isOpen, onClose, onAdd }: AddChildModalProps) {
         </div>
       </div>
     </Modal>
-  )
+  );
 }
