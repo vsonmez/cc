@@ -10,55 +10,55 @@ export interface Task {
 
 export function createTask(
   childId: string,
-  subject: string,
-  description: string,
-  dueDate: string
+  taskSubject: string,
+  taskDescription: string,
+  taskDueDate: string
 ): Task {
   return {
     id: crypto.randomUUID(),
     childId,
-    subject: subject.trim(),
-    description: description.trim(),
-    dueDate,
+    subject: taskSubject.trim(),
+    description: taskDescription.trim(),
+    dueDate: taskDueDate,
     completed: false,
     createdAt: Date.now()
   }
 }
 
-export function isValidSubject(subject: string): boolean {
-  const trimmedSubject = subject.trim()
+export function isValidSubject(taskSubject: string): boolean {
+  const trimmedSubject = taskSubject.trim()
   return trimmedSubject.length > 0 && trimmedSubject.length <= 30
 }
 
-export function isValidDescription(description: string): boolean {
-  return description.length <= 200
+export function isValidDescription(taskDescription: string): boolean {
+  return taskDescription.length <= 200
 }
 
-export function isValidDueDate(dueDate: string): boolean {
+export function isValidDueDate(taskDueDate: string): boolean {
   // Why: dueDate must follow YYYY-MM-DD format for consistent storage and sorting
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-  if (!dateRegex.test(dueDate)) {
+  if (!dateRegex.test(taskDueDate)) {
     return false
   }
 
-  const parsedDate = new Date(dueDate)
+  const parsedDate = new Date(taskDueDate)
   return !isNaN(parsedDate.getTime())
 }
 
 export function validateTask(
-  subject: string,
-  description: string,
-  dueDate: string
+  taskSubject: string,
+  taskDescription: string,
+  taskDueDate: string
 ): string | null {
-  if (!isValidSubject(subject)) {
+  if (!isValidSubject(taskSubject)) {
     return "Ders adı 1-30 karakter arasında olmalıdır"
   }
 
-  if (!isValidDescription(description)) {
+  if (!isValidDescription(taskDescription)) {
     return "Açıklama maksimum 200 karakter olmalıdır"
   }
 
-  if (!isValidDueDate(dueDate)) {
+  if (!isValidDueDate(taskDueDate)) {
     return "Geçerli bir tarih seçiniz"
   }
 

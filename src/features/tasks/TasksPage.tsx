@@ -46,8 +46,8 @@ export function TasksPage() {
     updateSettings({ lastSelectedChildId: newChildId })
   }
 
-  const handleAddTask = (subject: string, description: string, dueDate: string) => {
-    addTask(selectedChildId, subject, description, dueDate)
+  const handleAddTask = (taskSubject: string, taskDescription: string, taskDueDate: string) => {
+    addTask(selectedChildId, taskSubject, taskDescription, taskDueDate)
   }
 
   const selectedChild = children.find(child => child.id === selectedChildId)

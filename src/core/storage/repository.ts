@@ -5,9 +5,9 @@ import { loadAppData, saveAppData } from './storage-engine'
 
 // ============ Children Operations ============
 
-export function addChild(name: string, grade: number): Child | null {
+export function addChild(childName: string, childGrade: number): Child | null {
   const data = loadAppData()
-  const newChild = createChild(name, grade)
+  const newChild = createChild(childName, childGrade)
 
   data.children.push(newChild)
 
@@ -19,7 +19,7 @@ export function addChild(name: string, grade: number): Child | null {
   return newChild
 }
 
-export function updateChild(childId: string, name: string, grade: number): boolean {
+export function updateChild(childId: string, childName: string, childGrade: number): boolean {
   const data = loadAppData()
   const childIndex = data.children.findIndex(child => child.id === childId)
 
@@ -29,8 +29,8 @@ export function updateChild(childId: string, name: string, grade: number): boole
 
   data.children[childIndex] = {
     ...data.children[childIndex],
-    name: name.trim(),
-    grade
+    name: childName.trim(),
+    grade: childGrade
   }
 
   return saveAppData(data)
@@ -66,9 +66,9 @@ export function getChildById(childId: string): Child | null {
 
 export function addTask(
   childId: string,
-  subject: string,
-  description: string,
-  dueDate: string
+  taskSubject: string,
+  taskDescription: string,
+  taskDueDate: string
 ): Task | null {
   const data = loadAppData()
 
@@ -78,7 +78,7 @@ export function addTask(
     return null
   }
 
-  const newTask = createTask(childId, subject, description, dueDate)
+  const newTask = createTask(childId, taskSubject, taskDescription, taskDueDate)
   data.tasks.push(newTask)
 
   const saveSucceeded = saveAppData(data)
@@ -91,9 +91,9 @@ export function addTask(
 
 export function updateTask(
   taskId: string,
-  subject: string,
-  description: string,
-  dueDate: string
+  taskSubject: string,
+  taskDescription: string,
+  taskDueDate: string
 ): boolean {
   const data = loadAppData()
   const taskIndex = data.tasks.findIndex(task => task.id === taskId)
@@ -104,9 +104,9 @@ export function updateTask(
 
   data.tasks[taskIndex] = {
     ...data.tasks[taskIndex],
-    subject: subject.trim(),
-    description: description.trim(),
-    dueDate
+    subject: taskSubject.trim(),
+    description: taskDescription.trim(),
+    dueDate: taskDueDate
   }
 
   return saveAppData(data)

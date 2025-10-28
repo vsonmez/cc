@@ -8,32 +8,32 @@ import { validateTask } from '../../core/models/task'
 interface AddTaskModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (subject: string, description: string, dueDate: string) => void
+  onAdd: (taskSubject: string, taskDescription: string, taskDueDate: string) => void
 }
 
 export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
-  const [subject, setSubject] = useState('')
-  const [description, setDescription] = useState('')
-  const [dueDate, setDueDate] = useState(getTodayDateString())
+  const [taskSubject, setTaskSubject] = useState('')
+  const [taskDescription, setTaskDescription] = useState('')
+  const [taskDueDate, setTaskDueDate] = useState(getTodayDateString())
   const [error, setError] = useState('')
 
   const handleSubmit = () => {
-    const validationError = validateTask(subject, description, dueDate)
+    const validationError = validateTask(taskSubject, taskDescription, taskDueDate)
 
     if (validationError) {
       setError(validationError)
       return
     }
 
-    onAdd(subject, description, dueDate)
+    onAdd(taskSubject, taskDescription, taskDueDate)
     handleClose()
   }
 
   const handleClose = () => {
     // Why: Reset form state when modal closes
-    setSubject('')
-    setDescription('')
-    setDueDate(getTodayDateString())
+    setTaskSubject('')
+    setTaskDescription('')
+    setTaskDueDate(getTodayDateString())
     setError('')
     onClose()
   }
@@ -43,8 +43,8 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
       <div className="space-y-4">
         <Input
           label="Ders Adı"
-          value={subject}
-          onChange={setSubject}
+          value={taskSubject}
+          onChange={setTaskSubject}
           placeholder="örn: Matematik"
           required
           maxLength={30}
@@ -52,8 +52,8 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
 
         <Textarea
           label="Açıklama"
-          value={description}
-          onChange={setDescription}
+          value={taskDescription}
+          onChange={setTaskDescription}
           placeholder="örn: Sayfa 45-47, problemleri çöz"
           maxLength={200}
           rows={3}
@@ -61,8 +61,8 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
 
         <Input
           label="Teslim Tarihi"
-          value={dueDate}
-          onChange={setDueDate}
+          value={taskDueDate}
+          onChange={setTaskDueDate}
           type="date"
           required
         />

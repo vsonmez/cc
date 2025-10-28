@@ -5,30 +5,30 @@ export interface Child {
   createdAt: number
 }
 
-export function createChild(name: string, grade: number): Child {
+export function createChild(childName: string, childGrade: number): Child {
   return {
     id: crypto.randomUUID(),
-    name: name.trim(),
-    grade,
+    name: childName.trim(),
+    grade: childGrade,
     createdAt: Date.now()
   }
 }
 
-export function isValidChildName(name: string): boolean {
-  const trimmedName = name.trim()
+export function isValidChildName(childName: string): boolean {
+  const trimmedName = childName.trim()
   return trimmedName.length > 0 && trimmedName.length <= 50
 }
 
-export function isValidGrade(grade: number): boolean {
-  return Number.isInteger(grade) && grade >= 1 && grade <= 12
+export function isValidGrade(childGrade: number): boolean {
+  return Number.isInteger(childGrade) && childGrade >= 1 && childGrade <= 12
 }
 
-export function validateChild(name: string, grade: number): string | null {
-  if (!isValidChildName(name)) {
+export function validateChild(childName: string, childGrade: number): string | null {
+  if (!isValidChildName(childName)) {
     return "İsim 1-50 karakter arasında olmalıdır"
   }
 
-  if (!isValidGrade(grade)) {
+  if (!isValidGrade(childGrade)) {
     return "Sınıf 1-12 arasında olmalıdır"
   }
 

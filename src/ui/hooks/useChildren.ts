@@ -13,16 +13,16 @@ export function useChildren() {
 
   const children = getChildren()
 
-  const addChild = (name: string, grade: number): Child | null => {
-    const newChild = addChildToStorage(name, grade)
+  const addChild = (childName: string, childGrade: number): Child | null => {
+    const newChild = addChildToStorage(childName, childGrade)
     if (newChild) {
       refreshData()
     }
     return newChild
   }
 
-  const updateChild = (childId: string, name: string, grade: number): boolean => {
-    const success = updateChildInStorage(childId, name, grade)
+  const updateChild = (childId: string, childName: string, childGrade: number): boolean => {
+    const success = updateChildInStorage(childId, childName, childGrade)
     if (success) {
       refreshData()
     }

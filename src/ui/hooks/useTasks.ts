@@ -17,11 +17,11 @@ export function useTasks(childId?: string) {
 
   const addTask = (
     taskChildId: string,
-    subject: string,
-    description: string,
-    dueDate: string
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string
   ): Task | null => {
-    const newTask = addTaskToStorage(taskChildId, subject, description, dueDate)
+    const newTask = addTaskToStorage(taskChildId, taskSubject, taskDescription, taskDueDate)
     if (newTask) {
       refreshData()
     }
@@ -30,11 +30,11 @@ export function useTasks(childId?: string) {
 
   const updateTask = (
     taskId: string,
-    subject: string,
-    description: string,
-    dueDate: string
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string
   ): boolean => {
-    const success = updateTaskInStorage(taskId, subject, description, dueDate)
+    const success = updateTaskInStorage(taskId, taskSubject, taskDescription, taskDueDate)
     if (success) {
       refreshData()
     }

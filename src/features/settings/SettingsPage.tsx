@@ -14,8 +14,8 @@ export function SettingsPage() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
-  const handleAddChild = (name: string, grade: number) => {
-    addChild(name, grade)
+  const handleAddChild = (childName: string, childGrade: number) => {
+    addChild(childName, childGrade)
   }
 
   const handleDeleteChild = (childId: string, childName: string) => {
