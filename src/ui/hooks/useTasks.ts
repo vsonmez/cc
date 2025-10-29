@@ -7,7 +7,7 @@ import {
   updateTask as updateTaskInStorage,
   deleteTask as deleteTaskFromStorage,
   toggleTaskCompletion as toggleTaskInStorage
-} from '../../core/storage/repository';
+} from '../../core/storage';
 import type { Task } from '../../core/models/task';
 
 export function useTasks(childId?: string) {

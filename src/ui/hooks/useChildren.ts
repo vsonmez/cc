@@ -5,7 +5,7 @@ import {
   addChild as addChildToStorage,
   updateChild as updateChildInStorage,
   deleteChild as deleteChildFromStorage
-} from '../../core/storage/repository';
+} from '../../core/storage';
 import type { Child } from '../../core/models/child';
 
 export function useChildren() {

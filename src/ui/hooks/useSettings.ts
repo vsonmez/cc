@@ -2,7 +2,7 @@ import { useAppData } from './useAppData';
 import {
   getSettings as getSettingsFromStorage,
   updateSettings as updateSettingsInStorage
-} from '../../core/storage/repository';
+} from '../../core/storage';
 import type { Settings } from '../../core/models/storage-schema';
 
 export function useSettings() {
