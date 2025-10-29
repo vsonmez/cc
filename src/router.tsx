@@ -1,9 +1,9 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createHashRouter, Navigate } from 'react-router-dom';
 import { TasksPage } from './features/tasks/TasksPage';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { OnboardingPage } from './features/onboarding/OnboardingPage';
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <TasksPage />
