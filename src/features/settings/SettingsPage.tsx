@@ -68,7 +68,7 @@ export function SettingsPage() {
         </section>
 
         {/* Reminder section */}
-        <section>
+        {/*<section>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Hatırlatıcı</h2>
 
           <div className="bg-white p-4 rounded-lg border border-gray-200">
@@ -88,7 +88,7 @@ export function SettingsPage() {
           <p className="text-xs text-gray-500 mt-2">
             Not: Web bildirimleri için tarayıcı izni gereklidir
           </p>
-        </section>
+        </section>*/}
 
         {/* App info */}
         <section className="pt-8 border-t">
