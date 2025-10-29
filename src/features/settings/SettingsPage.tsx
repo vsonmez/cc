@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChildren } from '../../ui/hooks/useChildren';
-import { useSettings } from '../../ui/hooks/useSettings';
+/* import { useSettings } from '../../ui/hooks/useSettings'; */
 import { Button } from '../../ui/components/Button';
-import { Checkbox } from '../../ui/components/Checkbox';
 import { ChildList } from './ChildList';
 import { AddChildModal } from './AddChildModal';
 
 export function SettingsPage() {
   const navigate = useNavigate();
   const { children, addChild, deleteChild } = useChildren();
-  const { settings, updateSettings } = useSettings();
+  /* const { settings, updateSettings } = useSettings(); */
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -30,9 +29,9 @@ export function SettingsPage() {
     deleteChild(childId);
   };
 
-  const handleReminderToggle = (enabled: boolean) => {
+  /* const handleReminderToggle = (enabled: boolean) => {
     updateSettings({ reminderEnabled: enabled });
-  };
+  }; */
 
   return (
     <div className="min-h-screen bg-gray-50">
