@@ -48,8 +48,7 @@ export function useNotifications() {
       if (permission === 'granted') {
         // Get FCM token
         const token = await getToken(messaging, {
-          vapidKey:
-            'BKcqGqKHc_8oT1jHFVuFGX6QwKvR3Qe7pY4VJ3mL9uN8xZ2pA1bC4dE5fG6hI7jK8lM9nO0pQ1rS2tU3vW4xY5z'
+          vapidKey: 'BFCPZKdD1MfKUq9z-h--BUC-P4NlN4XSZMz4SISdijEKvgeDuNFk-TrmO9aw0tydNQ1JtuPmcez8ixZGjvnZH0g'
         });
 
         if (token) {
