@@ -11,6 +11,21 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+// Why: Validate that environment variables are loaded
+const missingVars = Object.entries(firebaseConfig)
+  .filter(([_, value]) => !value)
+  .map(([key]) => key);
+
+if (missingVars.length > 0) {
+  console.error('❌ Missing Firebase environment variables:', missingVars);
+  console.error('💡 Solution: Restart the dev server (npm run dev) to load .env file');
+  throw new Error(
+    `Missing Firebase config: ${missingVars.join(', ')}. Please restart dev server.`
+  );
+}
+
+console.log('✅ Firebase config loaded successfully');
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
