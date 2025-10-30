@@ -69,10 +69,12 @@ export function useNotifications() {
 
   const sendTestNotification = () => {
     if (notificationPermission === 'granted') {
+      // Why: Use timestamp to make each test notification unique
+      const timestamp = new Date().getTime();
       new Notification('Test Bildirimi', {
         body: 'Bildirimler çalışıyor! 🎉',
         icon: '/vite.svg',
-        tag: 'test-notification'
+        tag: `test-notification-${timestamp}`
       });
     }
   };
