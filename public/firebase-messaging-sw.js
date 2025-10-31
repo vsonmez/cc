@@ -26,10 +26,17 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification?.body || 'Tamamlanmamış ödevleriniz var!',
     icon: '/vite.svg',
     badge: '/vite.svg',
-    tag: 'homework-reminder',
+    tag: payload.data?.type || 'homework-reminder',
     requireInteraction: true,
-    data: payload.data
+    vibrate: [200, 100, 200],
+    silent: false,
+    renotify: false,
+    data: payload.data,
+    // Android-specific: Add timestamp for proper ordering
+    timestamp: Date.now()
   };
+
+  console.log('[firebase-messaging-sw.js] Showing notification:', notificationTitle, notificationOptions);
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });
