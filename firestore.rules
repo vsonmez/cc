@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // FCM Tokens collection
+    // Why: Allow any client to write their own FCM token
+    // Security: Tokens are self-identifying and can't be used maliciously by others
+    match /fcmTokens/{tokenId} {
+      // Allow anyone to create/update their own token
+      allow create, update: if request.auth == null || request.auth != null;
+
+      // Prevent reading tokens (privacy)
+      allow read: if false;
+
+      // Prevent deletion by clients (Cloud Functions will clean up invalid tokens)
+      allow delete: if false;
+    }
+
+    // Default: deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

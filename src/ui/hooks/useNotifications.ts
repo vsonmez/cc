@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { messaging, getToken, onMessage } from '../../core/firebase/config';
+import { messaging, getToken, onMessage, db } from '../../core/firebase/config';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export function useNotifications() {
   const [notificationPermission, setNotificationPermission] =
@@ -35,6 +36,29 @@ export function useNotifications() {
     }
   }, []);
 
+  const saveFcmTokenToFirestore = async (token: string): Promise<void> => {
+    try {
+      // Why: Use token as document ID to prevent duplicates
+      const tokenDocRef = doc(collection(db, 'fcmTokens'), token);
+
+      await setDoc(
+        tokenDocRef,
+        {
+          token: token,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          userAgent: navigator.userAgent
+        },
+        { merge: true }
+      );
+
+      console.log('✅ FCM token saved to Firestore');
+    } catch (error) {
+      console.error('Error saving FCM token to Firestore:', error);
+      // Don't throw error, token is still usable locally
+    }
+  };
+
   const requestPermission = async (): Promise<boolean> => {
     if (!isSupported || !messaging) {
       return false;
@@ -56,6 +80,10 @@ export function useNotifications() {
           setFcmToken(token);
           // Why: Store token in localStorage for later use
           localStorage.setItem('fcm-token', token);
+
+          // Why: Save token to Firestore for Cloud Functions to send notifications
+          await saveFcmTokenToFirestore(token);
+
           return true;
         }
       }

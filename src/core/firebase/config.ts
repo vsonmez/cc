@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage, type Messaging } from 'firebase/messaging';
+import { getFirestore, type Firestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -29,6 +30,9 @@ console.log('✅ Firebase config loaded successfully');
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firestore
+const db: Firestore = getFirestore(app);
+
 // Initialize Firebase Cloud Messaging
 let messaging: Messaging | null = null;
 
@@ -39,4 +43,4 @@ try {
   console.warn('Firebase Messaging not supported:', error);
 }
 
-export { app, messaging, getToken, onMessage };
+export { app, db, messaging, getToken, onMessage };
