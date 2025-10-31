@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { messaging, getToken, onMessage } from '../../core/firebase/config';
 
 export function useNotifications() {
-  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>(
-    'default'
-  );
+  const [notificationPermission, setNotificationPermission] =
+    useState<NotificationPermission>('default');
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const [isSupported, setIsSupported] = useState(true);
 
@@ -48,11 +47,12 @@ export function useNotifications() {
       if (permission === 'granted') {
         // Get FCM token
         const token = await getToken(messaging, {
-          vapidKey: 'BFCPZKdD1MfKUq9z-h--BUC-P4NlN4XSZMz4SISdijEKvgeDuNFk-TrmO9aw0tydNQ1JtuPmcez8ixZGjvnZH0g'
+          vapidKey:
+            'BFCPZKdD1MfKUq9z-h--BUC-P4NlN4XSZMz4SISdijEKvgeDuNFk-TrmO9aw0tydNQ1JtuPmcez8ixZGjvnZH0g'
         });
 
         if (token) {
-          console.log('FCM Token:', token);
+          // console.log('FCM Token:', token);
           setFcmToken(token);
           // Why: Store token in localStorage for later use
           localStorage.setItem('fcm-token', token);

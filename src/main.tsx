@@ -10,8 +10,8 @@ if ('serviceWorker' in navigator) {
   const swPath = `${import.meta.env.BASE_URL}firebase-messaging-sw.js`;
   navigator.serviceWorker
     .register(swPath)
-    .then((registration) => {
-      console.log('Service Worker registered:', registration);
+    .then(() => {
+      console.log('Service Worker registered:');
     })
     .catch((error) => {
       console.error('Service Worker registration failed:', error);
