@@ -18,6 +18,37 @@ export function useNotifications() {
 
     setNotificationPermission(Notification.permission);
 
+    // Migration: If token exists in localStorage but not migrated to Firestore yet
+    const migrateExistingToken = async () => {
+      const existingToken = localStorage.getItem('fcm-token');
+      const migrated = localStorage.getItem('fcm-token-migrated');
+
+      if (existingToken && !migrated && Notification.permission === 'granted') {
+        console.log('🔄 Migrating existing FCM token to Firestore...');
+        try {
+          const tokenDocRef = doc(collection(db, 'fcmTokens'), existingToken);
+          await setDoc(
+            tokenDocRef,
+            {
+              token: existingToken,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+              userAgent: navigator.userAgent,
+              migrated: true
+            },
+            { merge: true }
+          );
+          console.log('✅ FCM token migrated to Firestore');
+          localStorage.setItem('fcm-token-migrated', 'true');
+          setFcmToken(existingToken);
+        } catch (error) {
+          console.error('❌ Error migrating token to Firestore:', error);
+        }
+      }
+    };
+
+    migrateExistingToken();
+
     // Listen for foreground messages
     if (messaging) {
       const unsubscribe = onMessage(messaging, (payload) => {
