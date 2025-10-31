@@ -18,6 +18,79 @@ export function useNotifications() {
 
     setNotificationPermission(Notification.permission);
 
+    // Auto-register token if permission already granted but token missing
+    const autoRegisterToken = async () => {
+      const existingToken = localStorage.getItem('fcm-token');
+      const migrated = localStorage.getItem('fcm-token-migrated');
+
+      // Case 1: Token exists but not migrated to Firestore yet
+      if (existingToken && !migrated && Notification.permission === 'granted') {
+        console.log('🔄 Migrating existing FCM token to Firestore...');
+        try {
+          const tokenDocRef = doc(collection(db, 'fcmTokens'), existingToken);
+          await setDoc(
+            tokenDocRef,
+            {
+              token: existingToken,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+              userAgent: navigator.userAgent,
+              migrated: true
+            },
+            { merge: true }
+          );
+          console.log('✅ FCM token migrated to Firestore');
+          localStorage.setItem('fcm-token-migrated', 'true');
+          setFcmToken(existingToken);
+        } catch (error) {
+          console.error('❌ Error migrating token to Firestore:', error);
+        }
+      }
+
+      // Case 2: Permission granted but no token (localStorage cleared or token never obtained)
+      if (!existingToken && Notification.permission === 'granted' && messaging) {
+        console.log('🔄 Permission granted but no token found. Getting new token...');
+        try {
+          // Wait for service worker to be ready
+          if ('serviceWorker' in navigator) {
+            console.log('⏳ Waiting for service worker to be ready...');
+            const registration = await navigator.serviceWorker.ready;
+            console.log('✅ Service worker ready');
+          }
+
+          const token = await getToken(messaging, {
+            vapidKey:
+              'BFCPZKdD1MfKUq9z-h--BUC-P4NlN4XSZMz4SISdijEKvgeDuNFk-TrmO9aw0tydNQ1JtuPmcez8ixZGjvnZH0g'
+          });
+
+          if (token) {
+            console.log('✅ New FCM token obtained');
+            setFcmToken(token);
+            localStorage.setItem('fcm-token', token);
+            localStorage.setItem('fcm-token-migrated', 'true');
+
+            // Save to Firestore
+            const tokenDocRef = doc(collection(db, 'fcmTokens'), token);
+            await setDoc(
+              tokenDocRef,
+              {
+                token: token,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+                userAgent: navigator.userAgent
+              },
+              { merge: true }
+            );
+            console.log('✅ FCM token saved to Firestore');
+          }
+        } catch (error) {
+          console.error('❌ Error getting new token:', error);
+        }
+      }
+    };
+
+    autoRegisterToken();
+
     // Listen for foreground messages
     if (messaging) {
       const unsubscribe = onMessage(messaging, (payload) => {
@@ -69,6 +142,13 @@ export function useNotifications() {
       setNotificationPermission(permission);
 
       if (permission === 'granted') {
+        // Wait for service worker to be ready
+        if ('serviceWorker' in navigator) {
+          console.log('⏳ Waiting for service worker to be ready...');
+          await navigator.serviceWorker.ready;
+          console.log('✅ Service worker ready');
+        }
+
         // Get FCM token
         const token = await getToken(messaging, {
           vapidKey:

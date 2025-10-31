@@ -8,13 +8,17 @@ import { notificationScheduler } from './core/services/notificationScheduler';
 if ('serviceWorker' in navigator) {
   // Why: Use BASE_URL from Vite config for correct path in GitHub Pages
   const swPath = `${import.meta.env.BASE_URL}firebase-messaging-sw.js`;
+  console.log('🔄 Registering service worker:', swPath);
+
   navigator.serviceWorker
     .register(swPath)
-    .then(() => {
-      console.log('Service Worker registered:');
+    .then((registration) => {
+      console.log('✅ Service Worker registered successfully:', registration.scope);
+      console.log('Service Worker state:', registration.active?.state);
     })
     .catch((error) => {
-      console.error('Service Worker registration failed:', error);
+      console.error('❌ Service Worker registration failed:', error);
+      console.error('Attempted path:', swPath);
     });
 }
 
