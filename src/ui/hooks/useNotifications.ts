@@ -51,6 +51,13 @@ export function useNotifications() {
       if (!existingToken && Notification.permission === 'granted' && messaging) {
         console.log('🔄 Permission granted but no token found. Getting new token...');
         try {
+          // Wait for service worker to be ready
+          if ('serviceWorker' in navigator) {
+            console.log('⏳ Waiting for service worker to be ready...');
+            const registration = await navigator.serviceWorker.ready;
+            console.log('✅ Service worker ready');
+          }
+
           const token = await getToken(messaging, {
             vapidKey:
               'BFCPZKdD1MfKUq9z-h--BUC-P4NlN4XSZMz4SISdijEKvgeDuNFk-TrmO9aw0tydNQ1JtuPmcez8ixZGjvnZH0g'
@@ -135,6 +142,13 @@ export function useNotifications() {
       setNotificationPermission(permission);
 
       if (permission === 'granted') {
+        // Wait for service worker to be ready
+        if ('serviceWorker' in navigator) {
+          console.log('⏳ Waiting for service worker to be ready...');
+          await navigator.serviceWorker.ready;
+          console.log('✅ Service worker ready');
+        }
+
         // Get FCM token
         const token = await getToken(messaging, {
           vapidKey:
