@@ -2,14 +2,14 @@
   "name": "Ödev Takip Sistemi",
   "short_name": "Ödev Takip",
   "description": "Çocuklarınızın ödevlerini kolayca takip edin",
-  "start_url": "/",
+  "start_url": "/cc/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/cc/vite.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -18,6 +18,6 @@
   "categories": ["education", "productivity"],
   "lang": "tr",
   "dir": "ltr",
-  "scope": "/",
+  "scope": "/cc/",
   "prefer_related_applications": false
 }

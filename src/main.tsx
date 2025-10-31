@@ -6,8 +6,10 @@ import { notificationScheduler } from './core/services/notificationScheduler';
 
 // Register service worker for push notifications
 if ('serviceWorker' in navigator) {
+  // Why: Use BASE_URL from Vite config for correct path in GitHub Pages
+  const swPath = `${import.meta.env.BASE_URL}firebase-messaging-sw.js`;
   navigator.serviceWorker
-    .register('/firebase-messaging-sw.js')
+    .register(swPath)
     .then((registration) => {
       console.log('Service Worker registered:', registration);
     })
