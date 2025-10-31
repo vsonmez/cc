@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChildren } from '../../ui/hooks/useChildren';
 import { useSettings } from '../../ui/hooks/useSettings';
@@ -14,6 +14,7 @@ export function SettingsPage() {
   const { settings, updateSettings } = useSettings();
   const {
     notificationPermission,
+    fcmToken,
     isSupported,
     requestPermission,
     sendTestNotification
@@ -21,6 +22,25 @@ export function SettingsPage() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+  const [showDebugInfo, setShowDebugInfo] = useState(false);
+  const [serviceWorkerStatus, setServiceWorkerStatus] = useState<string>('checking...');
+
+  // Check service worker status
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg) {
+          setServiceWorkerStatus(
+            reg.active ? `Active (${reg.active.state})` : 'Not active'
+          );
+        } else {
+          setServiceWorkerStatus('Not registered');
+        }
+      });
+    } else {
+      setServiceWorkerStatus('Not supported');
+    }
+  }, []);
 
   const handleAddChild = (childName: string, childGrade: number) => {
     addChild(childName, childGrade);
@@ -170,6 +190,71 @@ export function SettingsPage() {
           <p className="text-xs text-gray-500 mt-2">
             💡 İpucu: Bildirimler çalışması için uygulama açık olmalıdır
           </p>
+        </section>
+
+        {/* Debug Info */}
+        <section>
+          <button
+            onClick={() => setShowDebugInfo(!showDebugInfo)}
+            className="w-full text-left text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center justify-between"
+          >
+            <span>🔧 Debug Bilgileri</span>
+            <span>{showDebugInfo ? '▼' : '▶'}</span>
+          </button>
+
+          {showDebugInfo && (
+            <div className="mt-4 bg-gray-900 text-gray-100 p-4 rounded-lg text-xs font-mono space-y-2">
+              <div>
+                <strong className="text-green-400">Platform:</strong>{' '}
+                {navigator.userAgent.includes('Android') ? 'Android' :
+                 navigator.userAgent.includes('iPhone') ? 'iOS' : 'Desktop'}
+              </div>
+              <div>
+                <strong className="text-green-400">Browser:</strong>{' '}
+                {navigator.userAgent.includes('Chrome') ? 'Chrome' :
+                 navigator.userAgent.includes('Firefox') ? 'Firefox' :
+                 navigator.userAgent.includes('Safari') ? 'Safari' : 'Unknown'}
+              </div>
+              <div>
+                <strong className="text-green-400">Notification Permission:</strong>{' '}
+                <span className={
+                  notificationPermission === 'granted' ? 'text-green-300' :
+                  notificationPermission === 'denied' ? 'text-red-300' :
+                  'text-yellow-300'
+                }>
+                  {notificationPermission}
+                </span>
+              </div>
+              <div>
+                <strong className="text-green-400">Service Worker:</strong>{' '}
+                <span className={
+                  serviceWorkerStatus.includes('Active') ? 'text-green-300' : 'text-red-300'
+                }>
+                  {serviceWorkerStatus}
+                </span>
+              </div>
+              <div>
+                <strong className="text-green-400">FCM Token:</strong>{' '}
+                <span className={fcmToken ? 'text-green-300' : 'text-red-300'}>
+                  {fcmToken ? `${fcmToken.substring(0, 30)}...` : 'No token'}
+                </span>
+              </div>
+              <div>
+                <strong className="text-green-400">HTTPS:</strong>{' '}
+                <span className={window.location.protocol === 'https:' ? 'text-green-300' : 'text-red-300'}>
+                  {window.location.protocol === 'https:' ? 'Yes' : 'No (Required!)'}
+                </span>
+              </div>
+              <div>
+                <strong className="text-green-400">PWA Installed:</strong>{' '}
+                <span className={
+                  window.matchMedia('(display-mode: standalone)').matches ? 'text-green-300' : 'text-yellow-300'
+                }>
+                  {window.matchMedia('(display-mode: standalone)').matches ? 'Yes' : 'No'}
+                </span>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* App info */}
