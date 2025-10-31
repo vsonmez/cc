@@ -1,0 +1,21 @@
+# Compiled JavaScript files
+lib/
+*.js
+*.js.map
+
+# Node modules
+node_modules/
+
+# Firebase cache
+.firebase/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Service account keys (NEVER commit these!)
+*-firebase-adminsdk-*.json
+serviceAccountKey.json
+
+# Logs
+npm-debug.log
+firebase-debug.log
