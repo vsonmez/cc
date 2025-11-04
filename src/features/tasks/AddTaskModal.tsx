@@ -2,19 +2,28 @@ import { useState } from 'react';
 import { Modal } from '../../ui/components/Modal';
 import { Input } from '../../ui/components/Input';
 import { Textarea } from '../../ui/components/Textarea';
+import { Select } from '../../ui/components/Select';
 import { Button } from '../../ui/components/Button';
-import { validateTask } from '../../core/models/task';
+import { validateTask } from '../../core/models/Task';
+import { TASK_CATEGORIES, type TaskCategoryType } from '../../core/models/task-category';
 
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (taskSubject: string, taskDescription: string, taskDueDate: string) => void;
+  onAdd: (
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string,
+    taskCategory: TaskCategoryType
+  ) => void;
 }
 
 export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
   const [taskSubject, setTaskSubject] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskDueDate, setTaskDueDate] = useState(getTodayDateString());
+  const [selectedTaskCategory, setSelectedTaskCategory] =
+    useState<TaskCategoryType>('general_homework');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
@@ -25,7 +34,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
       return;
     }
 
-    onAdd(taskSubject, taskDescription, taskDueDate);
+    onAdd(taskSubject, taskDescription, taskDueDate, selectedTaskCategory);
     handleClose();
   };
 
@@ -34,9 +43,19 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
     setTaskSubject('');
     setTaskDescription('');
     setTaskDueDate(getTodayDateString());
+    setSelectedTaskCategory('general_homework');
     setError('');
     onClose();
   };
+
+  const selectedCategoryData = TASK_CATEGORIES.find(
+    (category) => category.categoryType === selectedTaskCategory
+  );
+
+  const categoryOptions = TASK_CATEGORIES.map((category) => ({
+    value: category.categoryType,
+    label: `${category.displayName} · ${category.pointMultiplier}x puan`
+  }));
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Yeni Ödev">
@@ -49,6 +68,19 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
           required
           maxLength={30}
         />
+
+        <div>
+          <Select
+            label="Ödev Türü"
+            value={selectedTaskCategory}
+            onChange={(value) => setSelectedTaskCategory(value as TaskCategoryType)}
+            options={categoryOptions}
+            required
+          />
+          {selectedCategoryData && (
+            <p className="mt-1 text-xs text-gray-500">{selectedCategoryData.description}</p>
+          )}
+        </div>
 
         <Textarea
           label="Açıklama"

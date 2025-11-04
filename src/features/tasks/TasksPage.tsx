@@ -9,7 +9,8 @@ import { ConfirmDialog } from '../../ui/components/ConfirmDialog';
 import { TaskList } from './TaskList';
 import { AddTaskModal } from './AddTaskModal';
 import { EditTaskModal } from './EditTaskModal';
-import type { Task } from '../../core/models/task';
+import type { Task } from '../../core/models/Task';
+import type { TaskCategoryType } from '../../core/models/task-category';
 
 export function TasksPage() {
   const navigate = useNavigate();
@@ -52,8 +53,13 @@ export function TasksPage() {
     updateSettings({ lastSelectedChildId: newChildId });
   };
 
-  const handleAddTask = (taskSubject: string, taskDescription: string, taskDueDate: string) => {
-    addTask(selectedChildId, taskSubject, taskDescription, taskDueDate);
+  const handleAddTask = (
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string,
+    taskCategory: TaskCategoryType
+  ) => {
+    addTask(selectedChildId, taskSubject, taskDescription, taskDueDate, taskCategory);
   };
 
   const handleEditTask = (taskId: string) => {
@@ -72,9 +78,10 @@ export function TasksPage() {
     taskId: string,
     taskSubject: string,
     taskDescription: string,
-    taskDueDate: string
+    taskDueDate: string,
+    taskCategory: TaskCategoryType
   ) => {
-    updateTask(taskId, taskSubject, taskDescription, taskDueDate);
+    updateTask(taskId, taskSubject, taskDescription, taskDueDate, taskCategory);
     setIsEditModalOpen(false);
     setTaskToEdit(null);
   };
@@ -209,6 +216,9 @@ export function TasksPage() {
     </div>
   );
 }
+
+// Why: Default export enables React.lazy code splitting
+export default TasksPage;
 
 // Why: Format today's date in Turkish locale for header display
 function getTodayFormatted(): string {

@@ -1,5 +1,6 @@
-import type { Task } from '../../core/models/task';
+import type { Task } from '../../core/models/Task';
 import { Checkbox } from '../../ui/components/Checkbox';
+import { TaskCategoryBadge } from './components/TaskCategoryBadge';
 
 interface TaskItemProps {
   task: Task;
@@ -54,7 +55,11 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
       <Checkbox checked={isCompleted} onChange={() => onToggle(task.id)} />
 
       <div className="flex-1 min-w-0">
-        <h3 className={`font-medium text-gray-900 ${taskStyles}`}>{task.subject}</h3>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className={`font-medium text-gray-900 ${taskStyles}`}>{task.subject}</h3>
+          <span className="text-gray-400">·</span>
+          <TaskCategoryBadge categoryType={task.taskCategory} showMultiplier={true} />
+        </div>
         {task.description && (
           <p className={`text-sm text-gray-600 mt-1 whitespace-pre-wrap ${taskStyles}`}>
             {task.description}
