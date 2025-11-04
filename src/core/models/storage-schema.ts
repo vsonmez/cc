@@ -1,5 +1,5 @@
 import type { Child } from './child';
-import type { Task } from './Task';
+import type { Task } from './task';
 
 export interface Settings {
   reminderEnabled: boolean;

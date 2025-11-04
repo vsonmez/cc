@@ -33,9 +33,7 @@ export function TaskCategoryBadge({
   showMultiplier = false,
   className = ''
 }: TaskCategoryBadgeProps) {
-  const taskCategory = TASK_CATEGORIES.find(
-    (category) => category.categoryType === categoryType
-  );
+  const taskCategory = TASK_CATEGORIES.find((category) => category.categoryType === categoryType);
 
   // Why: Early return prevents rendering invalid category badges
   if (!taskCategory) {
@@ -51,7 +49,7 @@ export function TaskCategoryBadge({
     <span
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${taskCategory.colorClass} ${className}`}
     >
-      <DisplayIcon className="w-4 h-4 flex-shrink-0" />
+      <DisplayIcon className="w-4 h-4 shrink-0" />
       <span className="truncate">{taskCategory.displayName}</span>
       {showMultiplier && (
         <span className="font-semibold text-xs">({taskCategory.pointMultiplier}x)</span>

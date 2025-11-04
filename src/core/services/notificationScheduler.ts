@@ -1,5 +1,5 @@
 import { loadAppData } from '../storage/storage-engine';
-import type { Task } from '../models/Task';
+import type { Task } from '../models/task';
 
 export class NotificationScheduler {
   private intervalId: number | null = null;
@@ -75,9 +75,7 @@ export class NotificationScheduler {
     const taskCount = tasks.length;
     const title = 'Ödev Hatırlatıcı 📚';
     const body =
-      taskCount === 1
-        ? '1 tamamlanmamış ödev var!'
-        : `${taskCount} tamamlanmamış ödev var!`;
+      taskCount === 1 ? '1 tamamlanmamış ödev var!' : `${taskCount} tamamlanmamış ödev var!`;
 
     // Why: Group tasks by child for better notification
     const tasksByChild = this.groupTasksByChild(tasks);

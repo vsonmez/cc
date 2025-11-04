@@ -1,4 +1,4 @@
-import type { Task } from '../../core/models/Task';
+import type { Task } from '../../core/models/task';
 import { Checkbox } from '../../ui/components/Checkbox';
 import { TaskCategoryBadge } from './components/TaskCategoryBadge';
 
@@ -65,7 +65,9 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
             {task.description}
           </p>
         )}
-        <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${getDueDateColor(task.dueDate)}`}>
+        <div
+          className={`flex items-center gap-1 mt-2 text-sm font-medium ${getDueDateColor(task.dueDate)}`}
+        >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"

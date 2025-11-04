@@ -8,7 +8,7 @@ import {
   deleteTask as deleteTaskFromStorage,
   toggleTaskCompletion as toggleTaskInStorage
 } from '../../core/storage';
-import type { Task } from '../../core/models/Task';
+import type { Task } from '../../core/models/task';
 import type { TaskCategoryType } from '../../core/models/task-category';
 
 export function useTasks(childId?: string) {

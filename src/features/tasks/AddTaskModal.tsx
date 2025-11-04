@@ -4,7 +4,7 @@ import { Input } from '../../ui/components/Input';
 import { Textarea } from '../../ui/components/Textarea';
 import { Select } from '../../ui/components/Select';
 import { Button } from '../../ui/components/Button';
-import { validateTask } from '../../core/models/Task';
+import { validateTask } from '../../core/models/task';
 import { TASK_CATEGORIES, type TaskCategoryType } from '../../core/models/task-category';
 
 interface AddTaskModalProps {
