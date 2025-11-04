@@ -5,8 +5,11 @@ import { useTasks } from '../../ui/hooks/useTasks';
 import { useSettings } from '../../ui/hooks/useSettings';
 import { Button } from '../../ui/components/Button';
 import { Select } from '../../ui/components/Select';
+import { ConfirmDialog } from '../../ui/components/ConfirmDialog';
 import { TaskList } from './TaskList';
 import { AddTaskModal } from './AddTaskModal';
+import { EditTaskModal } from './EditTaskModal';
+import type { Task } from '../../core/models/task';
 
 export function TasksPage() {
   const navigate = useNavigate();
@@ -16,8 +19,12 @@ export function TasksPage() {
   // Why: Use last selected child from settings, or first child if none selected
   const [selectedChildId, setSelectedChildId] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks(selectedChildId);
+  const { tasks, addTask, updateTask, toggleTask, deleteTask } = useTasks(selectedChildId);
 
   // Why: Initialize selected child on mount
   useEffect(() => {
@@ -47,6 +54,61 @@ export function TasksPage() {
 
   const handleAddTask = (taskSubject: string, taskDescription: string, taskDueDate: string) => {
     addTask(selectedChildId, taskSubject, taskDescription, taskDueDate);
+  };
+
+  const handleEditTask = (taskId: string) => {
+    // Why: Find the task to edit and open the edit modal
+    const foundTask = tasks.find((task) => task.id === taskId);
+
+    if (!foundTask) {
+      return;
+    }
+
+    setTaskToEdit(foundTask);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateTask = (
+    taskId: string,
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string
+  ) => {
+    updateTask(taskId, taskSubject, taskDescription, taskDueDate);
+    setIsEditModalOpen(false);
+    setTaskToEdit(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setTaskToEdit(null);
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    // Why: Find the task to delete and open confirmation dialog
+    const foundTask = tasks.find((task) => task.id === taskId);
+
+    if (!foundTask) {
+      return;
+    }
+
+    setTaskToDelete(foundTask);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Why: Guard clause - cannot delete without a task
+    if (!taskToDelete) {
+      return;
+    }
+
+    deleteTask(taskToDelete.id);
+    setTaskToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteConfirmOpen(false);
+    setTaskToDelete(null);
   };
 
   const selectedChild = children.find((child) => child.id === selectedChildId);
@@ -111,7 +173,7 @@ export function TasksPage() {
           <p className="text-gray-600 text-sm mt-1">{getTodayFormatted()}</p>
         </div>
 
-        <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
+        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={handleEditTask} onDelete={handleDeleteTask} />
       </div>
 
       {/* Floating add button */}
@@ -125,6 +187,24 @@ export function TasksPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAdd={handleAddTask}
+      />
+
+      <EditTaskModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onUpdate={handleUpdateTask}
+        task={taskToEdit}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Ödevi Sil"
+        message={taskToDelete ? `"${taskToDelete.subject}" ödevi silinecek.\nBu işlem geri alınamaz.` : ''}
+        confirmText="Sil"
+        cancelText="İptal"
+        variant="danger"
       />
     </div>
   );

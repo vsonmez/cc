@@ -46,10 +46,23 @@ export const sendDailyReminders = functions
             badge: '/vite.svg',
             tag: 'daily-reminder',
             requireInteraction: true,
+            vibrate: [200, 100, 200],
+            actions: []
           },
           fcmOptions: {
             link: '/',
           },
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'homework-reminders',
+            priority: 'high' as any,
+            defaultSound: true,
+            defaultVibrateTimings: true,
+            defaultLightSettings: true,
+            visibility: 'public' as any
+          }
         },
         tokens: [] as string[],
       };
@@ -205,7 +218,23 @@ export const testNotification = functions.region('europe-west1').https.onRequest
           badge: '/vite.svg',
           tag: `test-${Date.now()}`,
           requireInteraction: true,
+          vibrate: [200, 100, 200],
+          actions: []
         },
+        fcmOptions: {
+          link: '/'
+        }
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          channelId: 'homework-reminders',
+          priority: 'high' as any,
+          defaultSound: true,
+          defaultVibrateTimings: true,
+          defaultLightSettings: true,
+          visibility: 'public' as any
+        }
       },
       tokens: tokens,
     };
