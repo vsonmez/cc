@@ -1,4 +1,4 @@
-import { createTask, type Task } from '../models/Task';
+import { createTask, type Task } from '../models/task';
 import type { TaskCategoryType } from '../models/task-category';
 import { loadAppData, saveAppData } from './storage-engine';
 

@@ -1,4 +1,4 @@
-import type { Task } from '../../core/models/Task';
+import type { Task } from '../../core/models/task';
 import { TaskItem } from './TaskItem';
 
 interface TaskListProps {
@@ -26,7 +26,13 @@ export function TaskList({ tasks, onToggle, onEdit, onDelete }: TaskListProps) {
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          onToggle={onToggle}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

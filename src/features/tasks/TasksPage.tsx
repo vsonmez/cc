@@ -9,7 +9,7 @@ import { ConfirmDialog } from '../../ui/components/ConfirmDialog';
 import { TaskList } from './TaskList';
 import { AddTaskModal } from './AddTaskModal';
 import { EditTaskModal } from './EditTaskModal';
-import type { Task } from '../../core/models/Task';
+import type { Task } from '../../core/models/task';
 import type { TaskCategoryType } from '../../core/models/task-category';
 
 export function TasksPage() {
@@ -180,7 +180,12 @@ export function TasksPage() {
           <p className="text-gray-600 text-sm mt-1">{getTodayFormatted()}</p>
         </div>
 
-        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={handleEditTask} onDelete={handleDeleteTask} />
+        <TaskList
+          tasks={tasks}
+          onToggle={toggleTask}
+          onEdit={handleEditTask}
+          onDelete={handleDeleteTask}
+        />
       </div>
 
       {/* Floating add button */}
@@ -208,7 +213,9 @@ export function TasksPage() {
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
         title="Ödevi Sil"
-        message={taskToDelete ? `"${taskToDelete.subject}" ödevi silinecek.\nBu işlem geri alınamaz.` : ''}
+        message={
+          taskToDelete ? `"${taskToDelete.subject}" ödevi silinecek.\nBu işlem geri alınamaz.` : ''
+        }
         confirmText="Sil"
         cancelText="İptal"
         variant="danger"

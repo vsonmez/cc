@@ -1,5 +1,5 @@
 import { createEmptyAppData, type AppData } from '../models/storage-schema';
-import type { Task } from '../models/Task';
+import type { Task } from '../models/task';
 
 const STORAGE_KEY = 'homework-tracker-data';
 
