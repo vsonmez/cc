@@ -5,6 +5,7 @@ import { useSettings } from '../../ui/hooks/useSettings';
 import { useNotifications } from '../../ui/hooks/useNotifications';
 import { Button } from '../../ui/components/Button';
 import { Checkbox } from '../../ui/components/Checkbox';
+import { ConfirmDialog } from '../../ui/components/ConfirmDialog';
 import { ChildList } from './ChildList';
 import { AddChildModal } from './AddChildModal';
 
@@ -24,6 +25,8 @@ export function SettingsPage() {
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
   const [showDebugInfo, setShowDebugInfo] = useState(false);
   const [serviceWorkerStatus, setServiceWorkerStatus] = useState<string>('checking...');
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [childToDelete, setChildToDelete] = useState<{ id: string; name: string } | null>(null);
 
   // Check service worker status
   useEffect(() => {
@@ -47,15 +50,23 @@ export function SettingsPage() {
   };
 
   const handleDeleteChild = (childId: string, childName: string) => {
-    const confirmDelete = window.confirm(
-      `${childName} silinecek. Tüm ödevleri de silinecek. Emin misiniz?`
-    );
+    setChildToDelete({ id: childId, name: childName });
+    setIsDeleteConfirmOpen(true);
+  };
 
-    if (!confirmDelete) {
+  const handleConfirmDeleteChild = () => {
+    // Why: Guard clause - cannot delete without a child
+    if (!childToDelete) {
       return;
     }
 
-    deleteChild(childId);
+    deleteChild(childToDelete.id);
+    setChildToDelete(null);
+  };
+
+  const handleCancelDeleteChild = () => {
+    setIsDeleteConfirmOpen(false);
+    setChildToDelete(null);
   };
 
   const handleReminderToggle = async (enabled: boolean) => {
@@ -270,6 +281,17 @@ export function SettingsPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAdd={handleAddChild}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={handleCancelDeleteChild}
+        onConfirm={handleConfirmDeleteChild}
+        title="Çocuğu Sil"
+        message={childToDelete ? `"${childToDelete.name}" silinecek.\nTüm ödevleri de silinecek.\nBu işlem geri alınamaz.` : ''}
+        confirmText="Sil"
+        cancelText="İptal"
+        variant="danger"
       />
     </div>
   );

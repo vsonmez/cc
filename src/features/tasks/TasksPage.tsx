@@ -5,6 +5,7 @@ import { useTasks } from '../../ui/hooks/useTasks';
 import { useSettings } from '../../ui/hooks/useSettings';
 import { Button } from '../../ui/components/Button';
 import { Select } from '../../ui/components/Select';
+import { ConfirmDialog } from '../../ui/components/ConfirmDialog';
 import { TaskList } from './TaskList';
 import { AddTaskModal } from './AddTaskModal';
 import { EditTaskModal } from './EditTaskModal';
@@ -20,6 +21,8 @@ export function TasksPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
   const { tasks, addTask, updateTask, toggleTask, deleteTask } = useTasks(selectedChildId);
 
@@ -79,6 +82,33 @@ export function TasksPage() {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setTaskToEdit(null);
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    // Why: Find the task to delete and open confirmation dialog
+    const foundTask = tasks.find((task) => task.id === taskId);
+
+    if (!foundTask) {
+      return;
+    }
+
+    setTaskToDelete(foundTask);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Why: Guard clause - cannot delete without a task
+    if (!taskToDelete) {
+      return;
+    }
+
+    deleteTask(taskToDelete.id);
+    setTaskToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteConfirmOpen(false);
+    setTaskToDelete(null);
   };
 
   const selectedChild = children.find((child) => child.id === selectedChildId);
@@ -143,7 +173,7 @@ export function TasksPage() {
           <p className="text-gray-600 text-sm mt-1">{getTodayFormatted()}</p>
         </div>
 
-        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={handleEditTask} onDelete={deleteTask} />
+        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={handleEditTask} onDelete={handleDeleteTask} />
       </div>
 
       {/* Floating add button */}
@@ -164,6 +194,17 @@ export function TasksPage() {
         onClose={handleCloseEditModal}
         onUpdate={handleUpdateTask}
         task={taskToEdit}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Ödevi Sil"
+        message={taskToDelete ? `"${taskToDelete.subject}" ödevi silinecek.\nBu işlem geri alınamaz.` : ''}
+        confirmText="Sil"
+        cancelText="İptal"
+        variant="danger"
       />
     </div>
   );
