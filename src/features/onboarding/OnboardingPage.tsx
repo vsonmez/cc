@@ -74,3 +74,6 @@ export function OnboardingPage() {
     </div>
   );
 }
+
+// Why: Default export enables React.lazy code splitting
+export default OnboardingPage;

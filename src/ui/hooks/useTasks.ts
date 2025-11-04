@@ -8,7 +8,8 @@ import {
   deleteTask as deleteTaskFromStorage,
   toggleTaskCompletion as toggleTaskInStorage
 } from '../../core/storage';
-import type { Task } from '../../core/models/task';
+import type { Task } from '../../core/models/Task';
+import type { TaskCategoryType } from '../../core/models/task-category';
 
 export function useTasks(childId?: string) {
   const { refreshData } = useAppData();
@@ -19,9 +20,16 @@ export function useTasks(childId?: string) {
     taskChildId: string,
     taskSubject: string,
     taskDescription: string,
-    taskDueDate: string
+    taskDueDate: string,
+    taskCategory: TaskCategoryType = 'general_homework'
   ): Task | null => {
-    const newTask = addTaskToStorage(taskChildId, taskSubject, taskDescription, taskDueDate);
+    const newTask = addTaskToStorage(
+      taskChildId,
+      taskSubject,
+      taskDescription,
+      taskDueDate,
+      taskCategory
+    );
     if (!newTask) return null;
 
     refreshData();
@@ -32,9 +40,16 @@ export function useTasks(childId?: string) {
     taskId: string,
     taskSubject: string,
     taskDescription: string,
-    taskDueDate: string
+    taskDueDate: string,
+    taskCategory: TaskCategoryType
   ): boolean => {
-    const success = updateTaskInStorage(taskId, taskSubject, taskDescription, taskDueDate);
+    const success = updateTaskInStorage(
+      taskId,
+      taskSubject,
+      taskDescription,
+      taskDueDate,
+      taskCategory
+    );
     if (!success) return false;
 
     refreshData();

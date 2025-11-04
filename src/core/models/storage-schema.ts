@@ -1,5 +1,5 @@
 import type { Child } from './child';
-import type { Task } from './task';
+import type { Task } from './Task';
 
 export interface Settings {
   reminderEnabled: boolean;
@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   lastSelectedChildId: null
 };
 
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 2;
 
 export function createEmptyAppData(): AppData {
   return {

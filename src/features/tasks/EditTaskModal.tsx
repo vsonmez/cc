@@ -2,14 +2,22 @@ import { useState, useEffect } from 'react';
 import { Modal } from '../../ui/components/Modal';
 import { Input } from '../../ui/components/Input';
 import { Textarea } from '../../ui/components/Textarea';
+import { Select } from '../../ui/components/Select';
 import { Button } from '../../ui/components/Button';
-import { validateTask } from '../../core/models/task';
-import type { Task } from '../../core/models/task';
+import { validateTask } from '../../core/models/Task';
+import type { Task } from '../../core/models/Task';
+import { TASK_CATEGORIES, type TaskCategoryType } from '../../core/models/task-category';
 
 interface EditTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdate: (taskId: string, taskSubject: string, taskDescription: string, taskDueDate: string) => void;
+  onUpdate: (
+    taskId: string,
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string,
+    taskCategory: TaskCategoryType
+  ) => void;
   task: Task | null;
 }
 
@@ -17,6 +25,8 @@ export function EditTaskModal({ isOpen, onClose, onUpdate, task }: EditTaskModal
   const [taskSubject, setTaskSubject] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskDueDate, setTaskDueDate] = useState('');
+  const [selectedTaskCategory, setSelectedTaskCategory] =
+    useState<TaskCategoryType>('general_homework');
   const [error, setError] = useState('');
 
   // Why: Populate form fields when task changes or modal opens
@@ -28,6 +38,7 @@ export function EditTaskModal({ isOpen, onClose, onUpdate, task }: EditTaskModal
     setTaskSubject(task.subject);
     setTaskDescription(task.description);
     setTaskDueDate(task.dueDate);
+    setSelectedTaskCategory(task.taskCategory);
     setError('');
   }, [task, isOpen]);
 
@@ -44,7 +55,7 @@ export function EditTaskModal({ isOpen, onClose, onUpdate, task }: EditTaskModal
       return;
     }
 
-    onUpdate(task.id, taskSubject, taskDescription, taskDueDate);
+    onUpdate(task.id, taskSubject, taskDescription, taskDueDate, selectedTaskCategory);
     handleClose();
   };
 
@@ -53,9 +64,19 @@ export function EditTaskModal({ isOpen, onClose, onUpdate, task }: EditTaskModal
     setTaskSubject('');
     setTaskDescription('');
     setTaskDueDate('');
+    setSelectedTaskCategory('general_homework');
     setError('');
     onClose();
   };
+
+  const selectedCategoryData = TASK_CATEGORIES.find(
+    (category) => category.categoryType === selectedTaskCategory
+  );
+
+  const categoryOptions = TASK_CATEGORIES.map((category) => ({
+    value: category.categoryType,
+    label: `${category.displayName} · ${category.pointMultiplier}x puan`
+  }));
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Ödevi Düzenle">
@@ -68,6 +89,19 @@ export function EditTaskModal({ isOpen, onClose, onUpdate, task }: EditTaskModal
           required
           maxLength={30}
         />
+
+        <div>
+          <Select
+            label="Ödev Türü"
+            value={selectedTaskCategory}
+            onChange={(value) => setSelectedTaskCategory(value as TaskCategoryType)}
+            options={categoryOptions}
+            required
+          />
+          {selectedCategoryData && (
+            <p className="mt-1 text-xs text-gray-500">{selectedCategoryData.description}</p>
+          )}
+        </div>
 
         <Textarea
           label="Açıklama"

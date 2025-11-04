@@ -1,4 +1,4 @@
-import type { Task } from '../../core/models/task';
+import type { Task } from '../../core/models/Task';
 import { TaskItem } from './TaskItem';
 
 interface TaskListProps {

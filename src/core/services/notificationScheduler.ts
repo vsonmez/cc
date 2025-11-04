@@ -1,5 +1,5 @@
 import { loadAppData } from '../storage/storage-engine';
-import type { Task } from '../models/task';
+import type { Task } from '../models/Task';
 
 export class NotificationScheduler {
   private intervalId: number | null = null;

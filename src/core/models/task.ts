@@ -1,3 +1,5 @@
+import type { TaskCategoryType } from './task-category';
+
 export interface Task {
   id: string;
   childId: string;
@@ -6,13 +8,15 @@ export interface Task {
   dueDate: string; // ISO date string (YYYY-MM-DD)
   completed: boolean;
   createdAt: number;
+  taskCategory: TaskCategoryType;
 }
 
 export function createTask(
   childId: string,
   taskSubject: string,
   taskDescription: string,
-  taskDueDate: string
+  taskDueDate: string,
+  taskCategory: TaskCategoryType = 'general_homework'
 ): Task {
   return {
     id: crypto.randomUUID(),
@@ -21,7 +25,8 @@ export function createTask(
     description: taskDescription.trim(),
     dueDate: taskDueDate,
     completed: false,
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    taskCategory
   };
 }
 

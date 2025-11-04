@@ -1,11 +1,13 @@
-import { createTask, type Task } from '../models/task';
+import { createTask, type Task } from '../models/Task';
+import type { TaskCategoryType } from '../models/task-category';
 import { loadAppData, saveAppData } from './storage-engine';
 
 export function addTask(
   childId: string,
   taskSubject: string,
   taskDescription: string,
-  taskDueDate: string
+  taskDueDate: string,
+  taskCategory: TaskCategoryType = 'general_homework'
 ): Task | null {
   const data = loadAppData();
 
@@ -15,7 +17,7 @@ export function addTask(
     return null;
   }
 
-  const newTask = createTask(childId, taskSubject, taskDescription, taskDueDate);
+  const newTask = createTask(childId, taskSubject, taskDescription, taskDueDate, taskCategory);
   data.tasks.push(newTask);
 
   const saveSucceeded = saveAppData(data);
@@ -30,7 +32,8 @@ export function updateTask(
   taskId: string,
   taskSubject: string,
   taskDescription: string,
-  taskDueDate: string
+  taskDueDate: string,
+  taskCategory: TaskCategoryType
 ): boolean {
   const data = loadAppData();
   const taskIndex = data.tasks.findIndex((task) => task.id === taskId);
@@ -43,7 +46,8 @@ export function updateTask(
     ...data.tasks[taskIndex],
     subject: taskSubject.trim(),
     description: taskDescription.trim(),
-    dueDate: taskDueDate
+    dueDate: taskDueDate,
+    taskCategory
   };
 
   return saveAppData(data);

@@ -1,6 +1,24 @@
-import { createEmptyAppData, STORAGE_VERSION, type AppData } from '../models/storage-schema';
+import { createEmptyAppData, type AppData } from '../models/storage-schema';
+import type { Task } from '../models/Task';
 
 const STORAGE_KEY = 'homework-tracker-data';
+
+const STORAGE_VERSION_V1 = 1;
+const STORAGE_VERSION_V2 = 2;
+
+function migrateToV2(oldAppData: AppData): AppData {
+  // Why: All existing tasks need taskCategory field for type safety in V2 schema
+  const migratedTasks: Task[] = oldAppData.tasks.map((task) => ({
+    ...task,
+    taskCategory: 'general_homework' as const
+  }));
+
+  return {
+    ...oldAppData,
+    tasks: migratedTasks,
+    version: STORAGE_VERSION_V2
+  };
+}
 
 export function loadAppData(): AppData {
   // Why: Try-catch because localStorage.getItem can throw in incognito/restricted modes
@@ -13,13 +31,21 @@ export function loadAppData(): AppData {
 
     const parsedData = JSON.parse(storedData) as AppData;
 
-    // Why: Version check enables data migration when schema changes in future versions
-    if (parsedData.version !== STORAGE_VERSION) {
-      console.warn('Storage version mismatch, resetting data');
-      return createEmptyAppData();
+    // Why: Migration path allows upgrading old data instead of resetting everything
+    if (parsedData.version === STORAGE_VERSION_V1) {
+      const migratedData = migrateToV2(parsedData);
+      // Why: Save migrated data immediately to avoid re-running migration on every load
+      saveAppData(migratedData);
+      return migratedData;
     }
 
-    return parsedData;
+    if (parsedData.version === STORAGE_VERSION_V2) {
+      return parsedData;
+    }
+
+    // Why: Unknown version means incompatible schema, safer to reset than risk corrupt data
+    console.warn('Unknown storage version, resetting data');
+    return createEmptyAppData();
   } catch (error) {
     console.error('Failed to load data from localStorage:', error);
     return createEmptyAppData();
