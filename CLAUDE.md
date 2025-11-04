@@ -79,10 +79,13 @@ Core Layer (Domain Models & Business Logic)
 
 Features are organized in `src/features/`:
 - `onboarding/` - Initial setup flow for adding first child
-- `settings/` - Child management, notification settings
-- `tasks/` - Task creation, listing, completion
+- `settings/` - Child management, notification settings, confirm dialogs
+- `tasks/` - Task creation, editing, listing, completion, confirm dialogs
 
-Shared UI components live in `src/ui/components/`.
+Shared UI components live in `src/ui/components/`:
+- Form components: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`
+- Layout components: `Modal`, `ConfirmDialog`
+- Feature components: `InstallPrompt`
 
 ### Data Flow Example
 
@@ -291,3 +294,87 @@ The app automatically syncs data across multiple tabs using storage events:
 3. Follow layered architecture
 4. Use domain-specific naming
 5. Apply code principles (guard clauses, no magic numbers, etc.)
+
+### CRUD Operations Pattern
+
+All repositories follow consistent CRUD patterns:
+
+**Task Repository** (`src/core/storage/taskRepository.ts`):
+- `addTask()` - Create new task
+- `updateTask()` - Update existing task (subject, description, dueDate)
+- `deleteTask()` - Delete task by ID
+- `toggleTaskCompletion()` - Toggle completed status
+- `getTasksByChild()` - Get all tasks for a child (sorted)
+- `getTasksByDate()` - Get tasks by due date
+- `getAllTasks()` - Get all tasks
+
+**Child Repository** (`src/core/storage/childRepository.ts`):
+- `addChild()` - Create new child
+- `deleteChild()` - Delete child (cascades to delete all tasks)
+- `getAllChildren()` - Get all children
+
+### Destructive Actions Require Confirmation
+
+**IMPORTANT:** All destructive actions (delete operations) MUST use `ConfirmDialog` component:
+
+```typescript
+// ❌ NEVER use window.confirm
+const confirmed = window.confirm('Are you sure?');
+
+// ✅ ALWAYS use ConfirmDialog component
+const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
+
+const handleDelete = (item: Item) => {
+  setItemToDelete(item);
+  setIsDeleteConfirmOpen(true);
+};
+
+const handleConfirmDelete = () => {
+  if (!itemToDelete) return;
+  deleteItem(itemToDelete.id);
+  setItemToDelete(null);
+};
+
+// In JSX:
+<ConfirmDialog
+  isOpen={isDeleteConfirmOpen}
+  onClose={() => { setIsDeleteConfirmOpen(false); setItemToDelete(null); }}
+  onConfirm={handleConfirmDelete}
+  title="Delete Item"
+  message="Are you sure? This cannot be undone."
+  confirmText="Delete"
+  cancelText="Cancel"
+  variant="danger"
+/>
+```
+
+**ConfirmDialog Props:**
+- `isOpen` - Controls visibility
+- `onClose` - Handler for cancel/close
+- `onConfirm` - Handler for confirm action
+- `title` - Dialog title
+- `message` - Warning message (supports `\n` for line breaks)
+- `confirmText` - Confirm button text (default: "Onayla")
+- `cancelText` - Cancel button text (default: "İptal")
+- `variant` - `'danger'` (red) or `'warning'` (yellow)
+
+### Modal Pattern
+
+For add/edit operations, use Modal-based components:
+
+**Example: EditTaskModal**
+```typescript
+<EditTaskModal
+  isOpen={isEditModalOpen}
+  onClose={handleCloseEditModal}
+  onUpdate={handleUpdateTask}
+  task={taskToEdit}  // Pass the item to edit
+/>
+```
+
+**Key points:**
+- Use `useEffect` to populate form fields when `task` prop changes
+- Reset form state in `onClose` handler
+- Validate before submission using domain model validators
+- Guard clause if item is null
