@@ -4,10 +4,11 @@ import { TaskItem } from './TaskItem';
 interface TaskListProps {
   tasks: Task[];
   onToggle: (taskId: string) => void;
+  onEdit: (taskId: string) => void;
   onDelete: (taskId: string) => void;
 }
 
-export function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
+export function TaskList({ tasks, onToggle, onEdit, onDelete }: TaskListProps) {
   const hasTasks = tasks.length > 0;
 
   if (!hasTasks) {
@@ -25,7 +26,7 @@ export function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
+        <TaskItem key={task.id} task={task} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );

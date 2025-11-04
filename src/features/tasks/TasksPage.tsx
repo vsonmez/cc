@@ -7,6 +7,8 @@ import { Button } from '../../ui/components/Button';
 import { Select } from '../../ui/components/Select';
 import { TaskList } from './TaskList';
 import { AddTaskModal } from './AddTaskModal';
+import { EditTaskModal } from './EditTaskModal';
+import type { Task } from '../../core/models/task';
 
 export function TasksPage() {
   const navigate = useNavigate();
@@ -16,8 +18,10 @@ export function TasksPage() {
   // Why: Use last selected child from settings, or first child if none selected
   const [selectedChildId, setSelectedChildId] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks(selectedChildId);
+  const { tasks, addTask, updateTask, toggleTask, deleteTask } = useTasks(selectedChildId);
 
   // Why: Initialize selected child on mount
   useEffect(() => {
@@ -47,6 +51,34 @@ export function TasksPage() {
 
   const handleAddTask = (taskSubject: string, taskDescription: string, taskDueDate: string) => {
     addTask(selectedChildId, taskSubject, taskDescription, taskDueDate);
+  };
+
+  const handleEditTask = (taskId: string) => {
+    // Why: Find the task to edit and open the edit modal
+    const foundTask = tasks.find((task) => task.id === taskId);
+
+    if (!foundTask) {
+      return;
+    }
+
+    setTaskToEdit(foundTask);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateTask = (
+    taskId: string,
+    taskSubject: string,
+    taskDescription: string,
+    taskDueDate: string
+  ) => {
+    updateTask(taskId, taskSubject, taskDescription, taskDueDate);
+    setIsEditModalOpen(false);
+    setTaskToEdit(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setTaskToEdit(null);
   };
 
   const selectedChild = children.find((child) => child.id === selectedChildId);
@@ -111,7 +143,7 @@ export function TasksPage() {
           <p className="text-gray-600 text-sm mt-1">{getTodayFormatted()}</p>
         </div>
 
-        <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
+        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={handleEditTask} onDelete={deleteTask} />
       </div>
 
       {/* Floating add button */}
@@ -125,6 +157,13 @@ export function TasksPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAdd={handleAddTask}
+      />
+
+      <EditTaskModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onUpdate={handleUpdateTask}
+        task={taskToEdit}
       />
     </div>
   );
